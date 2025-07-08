@@ -1,3 +1,4 @@
+import InputField from '@/components/form/InputField';
 import Button from '@/components/ui/Button';
 import Head from 'next/head';
 
@@ -16,6 +17,20 @@ export default function HomePage() {
         <Button variant="primary" disabled>
           다음 (비활성화)
         </Button>
+
+        <InputField
+          label="도서명"
+          id="bookName"
+          type="text"
+          errorMessage="도서명을 입력해주세요."
+          required
+        />
+        <InputField label="저자명" id="authorName" />
+        <InputField label="출판일" id="publicationDate" />
+        <InputField label="전체 페이지 수" id="totalPages" />
+        <InputField label="독서 상태" id="readingStatus" />
+        <InputField label="독서 시작일" id="startDate" type="date" />
+        <InputField label="독서 종료일" id="endDate" type="date" />
       </main>
     </>
   );
