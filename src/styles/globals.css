@@ -1,42 +1,143 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*************************
+ * Root & Document Level Reset
+ *************************/
+#root {
+  isolation: isolate;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  line-height: 1.5;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  min-height: 100vh;
+  @supports (min-height: 100dvh) {
+    min-height: 100dvh;
+  }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
+/*************************
+ * Box Model Reset
+ *************************/
+*,
+*::before,
+*::after,
+*::backdrop {
   box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  border-width: 0;
+  border-style: solid;
+}
+
+/*************************
+ * Typography Reset
+ *************************/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/*************************
+ * Form Elements Reset
+ *************************/
+button,
+input,
+select,
+textarea {
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  cursor: pointer;
+  user-select: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+::placeholder {
+  opacity: 1;
+}
+
+/*************************
+ * Table Reset
+ *************************/
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-indent: 0;
+}
+
+th {
+  text-align: inherit;
+}
+
+/*************************
+ * Semantic Elements Reset
+ *************************/
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+main {
+  display: block;
+}
+
+/*************************
+ * Media Elements Reset
+ *************************/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/*************************
+ * Lists & Links Reset
+ *************************/
+ol,
+ul {
+  list-style: none;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }
