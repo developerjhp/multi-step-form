@@ -1,4 +1,5 @@
 import InputField from '@/components/form/InputField';
+import Select from '@/components/form/Select';
 import Button from '@/components/ui/Button';
 import Head from 'next/head';
 
@@ -28,7 +29,18 @@ export default function HomePage() {
         <InputField label="저자명" id="authorName" />
         <InputField label="출판일" id="publicationDate" />
         <InputField label="전체 페이지 수" id="totalPages" />
-        <InputField label="독서 상태" id="readingStatus" />
+        <Select
+          label="독서 상태"
+          id="readingStatus"
+          placeholder="독서 상태를 선택해주세요."
+          value="reading"
+          options={[
+            { value: 'reading', label: '읽는 중' },
+            { value: 'wantToRead', label: '읽고 싶은 책' },
+            { value: 'finished', label: '읽음' },
+            { value: 'onHold', label: '보류 중' },
+          ]}
+        />
         <InputField label="독서 시작일" id="startDate" type="date" />
         <InputField label="독서 종료일" id="endDate" type="date" />
       </main>
