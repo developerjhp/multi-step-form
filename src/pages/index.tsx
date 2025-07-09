@@ -5,6 +5,7 @@ import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { Ratings } from '@/components/ui/Rating';
+import Tag from '@/components/ui/Tag';
 import Head from 'next/head';
 
 export default function HomePage() {
@@ -66,6 +67,12 @@ export default function HomePage() {
           <InputField label="도서명" id="bookName" required />
           <InputField label="저자명" id="authorName" required />
         </Card>
+
+        <Tag variant="default">기본 태그</Tag>
+        <Tag variant="info">정보 태그</Tag>
+        <Tag variant="success">성공 태그</Tag>
+        <Tag variant="warning">경고 태그</Tag>
+        <Tag variant="error">오류 태그</Tag>
       </main>
     </>
   );
