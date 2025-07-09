@@ -22,8 +22,8 @@ const variantStyles = {
     borderColor: color.gray300,
   },
   red: {
-    backgroundColor: color.red600,
-    color: color.white,
+    backgroundColor: color.white,
+    color: color.red600,
     borderColor: color.red600,
   },
   blue: {
