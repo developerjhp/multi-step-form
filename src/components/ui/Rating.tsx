@@ -2,6 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { color } from '@/styles/colors';
+import Icon from '@/components/ui/Icon';
+import StarIcon from '@/assets/icons/star.svg';
 
 const ratingVariants = {
   default: {
@@ -75,6 +77,16 @@ export function Ratings({
   );
 }
 
+interface DefaultStarIconProps {
+  size?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+function DefaultStarIcon({ size = 20, ...props }: DefaultStarIconProps) {
+  return <Icon as={StarIcon} size={size} color="currentColor" {...props} />;
+}
+
 interface PartialStarProps {
   fillPercentage: number;
   size: number;
@@ -109,28 +121,6 @@ function PartialStar({
     </PartialStarWrapper>
   );
 }
-
-const DefaultStarIcon = styled.div<{ size?: number }>`
-  display: inline-block;
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
-  }
-
-  &::before {
-    content: '';
-    display: block;
-    width: 100%;
-    height: 100%;
-    mask: url('/icons/star.svg') no-repeat center;
-    mask-size: contain;
-    background-color: currentColor;
-  }
-`;
 
 const Container = styled.div`
   display: flex;

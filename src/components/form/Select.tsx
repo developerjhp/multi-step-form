@@ -3,6 +3,9 @@ import styled from '@emotion/styled';
 import { color } from '@/styles/colors';
 import { fontSize, fontWeight } from '@/styles/fonts';
 import { KEYS } from '@/constants/keyboard';
+import Icon from '@/components/ui/Icon';
+import ChevronDownIcon from '@/assets/icons/chevron-down.svg';
+import CheckIcon from '@/assets/icons/check.svg';
 
 interface SelectOption {
   value: string;
@@ -114,7 +117,9 @@ export default function Select({
         hasError={hasError}
       >
         {displayValue}
-        <ChevronDownIcon isOpen={isOpen} />
+        <ChevronIconWrapper isOpen={isOpen}>
+          <Icon as={ChevronDownIcon} size={20} color={color.gray600} />
+        </ChevronIconWrapper>
       </TriggerButton>
 
       {isOpen && (
@@ -129,8 +134,12 @@ export default function Select({
               isSelected={value === option.value}
               highlighted={highlightedIndex === index}
             >
-              {value === option.value && <CheckIcon />}
-              {option.label}
+              {value === option.value && (
+                <Icon as={CheckIcon} size={20} color={color.blue500} />
+              )}
+              <OptionText hasIcon={value === option.value}>
+                {option.label}
+              </OptionText>
             </OptionItem>
           ))}
         </OptionList>
@@ -181,6 +190,14 @@ const TriggerButton = styled.button<{ hasError: boolean }>`
   }
 `;
 
+const ChevronIconWrapper = styled.div<{ isOpen: boolean }>`
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease-in-out;
+  transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  display: flex;
+  align-items: center;
+`;
+
 const OptionList = styled.ul`
   position: absolute;
   top: 100%;
@@ -211,37 +228,12 @@ const OptionItem = styled.li<{ isSelected: boolean; highlighted?: boolean }>`
   }
 `;
 
+const OptionText = styled.span<{ hasIcon: boolean }>`
+  margin-left: ${({ hasIcon }) => (hasIcon ? '0.5rem' : '0')};
+`;
+
 const ErrorMessage = styled.p`
   font-size: ${fontSize.sm};
   color: ${color.red500};
   margin-top: 0.25rem;
-`;
-
-const ChevronDownIcon = styled.span<{ isOpen: boolean }>`
-  margin-left: 0.5rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  transition: transform 0.2s ease-in-out;
-  transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
-
-  &::before {
-    content: url('/icons/chevron-down.svg');
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-`;
-
-const CheckIcon = styled.span`
-  margin-right: 0.5rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  color: ${color.blue500};
-
-  &::before {
-    content: url('/icons/check.svg');
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
 `;
