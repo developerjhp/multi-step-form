@@ -1,5 +1,6 @@
 import InputField from '@/components/form/InputField';
 import Select from '@/components/form/Select';
+import Stepper from '@/components/form/Stepper';
 import Button from '@/components/ui/Button';
 import Head from 'next/head';
 
@@ -43,6 +44,10 @@ export default function HomePage() {
         />
         <InputField label="독서 시작일" id="startDate" type="date" />
         <InputField label="독서 종료일" id="endDate" type="date" />
+        <Stepper
+          steps={['도서 정보', '독서 기록', '독서 후기']}
+          currentStepIndex={0}
+        />
       </main>
     </>
   );
