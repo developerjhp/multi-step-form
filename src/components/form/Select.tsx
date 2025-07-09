@@ -21,6 +21,7 @@ interface SelectProps {
   placeholder?: string;
   value?: string;
   onChange?: (value: string) => void;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 const { ARROW_UP, ARROW_DOWN, ENTER, SPACE, ESCAPE } = KEYS;
@@ -34,6 +35,7 @@ export default function Select({
   placeholder,
   value,
   onChange,
+  ref,
 }: SelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -115,6 +117,7 @@ export default function Select({
         onClick={handleToggle}
         onKeyDown={handleKeyDown}
         hasError={hasError}
+        ref={ref}
       >
         {displayValue}
         <ChevronIconWrapper isOpen={isOpen}>
@@ -182,11 +185,15 @@ const TriggerButton = styled.button<{ hasError: boolean }>`
   background-color: ${color.white};
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s ease-in-out;
+  transition:
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 
   &:focus {
     border-color: ${({ hasError }) =>
       hasError ? color.red500 : color.blue500};
+    box-shadow: 0 0 0 3px
+      ${({ hasError }) => (hasError ? color.red200 : color.blue200)};
   }
 `;
 
