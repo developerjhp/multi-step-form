@@ -3,6 +3,7 @@ import Select from '@/components/form/Select';
 import Stepper from '@/components/form/Stepper';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
+import { Ratings } from '@/components/ui/Rating';
 import Head from 'next/head';
 
 export default function HomePage() {
@@ -54,6 +55,10 @@ export default function HomePage() {
           title="도서 정보"
           description="도서 정보를 입력해주세요."
         />
+
+        <Ratings rating={4.5} variant="default" size={30} />
+        <Ratings rating={3.5} variant="error" size={30} />
+        <Ratings rating={2.5} variant="yellow" size={30} />
       </main>
     </>
   );
