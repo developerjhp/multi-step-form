@@ -18,3 +18,11 @@ export const READING_STATUS_OPTIONS = [
   { value: READING_STATUS.DONE, label: '읽음' },
   { value: READING_STATUS.PAUSE, label: '보류 중' },
 ];
+
+export const BOOK_FORM_STEPS = [
+  '도서 정보',
+  '추천 & 별점',
+  '독후감',
+  '인용구',
+  '공개 설정',
+];
