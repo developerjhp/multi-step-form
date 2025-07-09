@@ -1,9 +1,12 @@
 import { useFormContext, Controller } from 'react-hook-form';
 import InputField from '@/components/form/InputField';
 import Select from '@/components/form/Select';
+import Alert from '@/components/ui/Alert';
+import Icon from '@/components/ui/Icon';
 import styled from '@emotion/styled';
 import { type BookFormSchema } from '@/utils/schema';
 import { READING_STATUS, READING_STATUS_OPTIONS } from '@/constants/book';
+import AlertTriangleIcon from '@/assets/icons/alert-triangle.svg';
 
 export default function BookInfoStep() {
   const {
@@ -14,12 +17,22 @@ export default function BookInfoStep() {
   } = useFormContext<BookFormSchema>();
 
   const status = watch('status');
-
   const shouldShowStartDate = status && status !== READING_STATUS.WISH;
   const shouldShowEndDate = status === READING_STATUS.DONE;
 
+  const hasErrors = Object.keys(errors).length > 0;
+
   return (
     <Container>
+      {hasErrors && (
+        <Alert
+          variant="error"
+          title="입력 정보를 확인해주세요"
+          description="필수 항목들을 올바르게 입력해주세요."
+          icon={<Icon as={AlertTriangleIcon} size={20} />}
+        />
+      )}
+
       <GridContainer>
         <InputField
           id="title"
