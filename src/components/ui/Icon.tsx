@@ -18,16 +18,24 @@ export default function Icon({
   }
 
   return (
-    <IconWrapper size={size} iconColor={color} {...props}>
-      <IconComponent style={{ width: '100%', height: '100%' }} />
+    <IconWrapper iconColor={color} size={size} {...props}>
+      <IconComponent
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        style={{ display: 'block' }}
+      />
     </IconWrapper>
   );
 }
 
-const IconWrapper = styled.span<{ size: number; iconColor: string }>`
-  display: inline-block;
+const IconWrapper = styled.span<{ iconColor: string; size: number }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
   flex-shrink: 0;
   color: ${({ iconColor }) => iconColor};
+  overflow: hidden;
 `;
