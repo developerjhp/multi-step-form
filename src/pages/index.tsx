@@ -3,6 +3,7 @@ import Select from '@/components/form/Select';
 import Stepper from '@/components/form/Stepper';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
 import { Ratings } from '@/components/ui/Rating';
 import Head from 'next/head';
 
@@ -59,6 +60,12 @@ export default function HomePage() {
         <Ratings rating={4.5} variant="default" size={30} />
         <Ratings rating={3.5} variant="error" size={30} />
         <Ratings rating={2.5} variant="yellow" size={30} />
+
+        <Card>
+          <h2>도서 기본 정보</h2>
+          <InputField label="도서명" id="bookName" required />
+          <InputField label="저자명" id="authorName" required />
+        </Card>
       </main>
     </>
   );
