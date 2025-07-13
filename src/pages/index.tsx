@@ -1,6 +1,7 @@
 import InputField from '@/components/form/InputField';
 import Select from '@/components/form/Select';
 import Stepper from '@/components/form/Stepper';
+import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import Head from 'next/head';
 
@@ -47,6 +48,11 @@ export default function HomePage() {
         <Stepper
           steps={['도서 정보', '독서 기록', '독서 후기']}
           currentStepIndex={0}
+        />
+        <Alert
+          variant="error"
+          title="도서 정보"
+          description="도서 정보를 입력해주세요."
         />
       </main>
     </>
