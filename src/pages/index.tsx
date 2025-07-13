@@ -1,95 +1,147 @@
-import InputField from '@/components/form/InputField';
-import Select from '@/components/form/Select';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { bookFormSchema, type BookFormSchema } from '@/utils/schema';
+import BookInfoStep from '@/components/form/steps/BookInfoStep';
 import Stepper from '@/components/form/Stepper';
-import Alert from '@/components/ui/Alert';
+import styled from '@emotion/styled';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import Icon from '@/components/ui/Icon';
-import { Ratings } from '@/components/ui/Rating';
-import Tag from '@/components/ui/Tag';
-import Head from 'next/head';
-import ShareIcon from '@/assets/icons/share.svg';
-import { RadioItem } from '@/components/form/Radio';
-import { RadioGroup } from '@/components/form/Radio';
+import { color } from '@/styles/colors';
+import { fontSize, fontWeight } from '@/styles/fonts';
+import { BOOK_FORM_STEPS } from '@/constants/book';
 
 export default function HomePage() {
+  // TODO: PRD 3.4 - URL 쿼리 파라미터로 현재 단계 관리
+  const currentStep = 1;
+
+  const methods = useForm<BookFormSchema>({
+    resolver: zodResolver(bookFormSchema),
+    mode: 'all',
+    defaultValues: {
+      title: '',
+      author: '',
+      publishedDate: undefined,
+      totalPages: 0,
+      status: undefined,
+      startDate: undefined,
+      endDate: undefined,
+    },
+  });
+
+  const onSubmit = (data: BookFormSchema) => {
+    // 최종 제출 로직
+    console.log(data);
+  };
+
   return (
-    <>
-      <Head>
-        <title>독서 기록장</title>
-      </Head>
-      <main>
-        <h1>독서 기록 폼</h1>
-        <Button variant="primary">다음</Button>
-        <Button variant="secondary">이전</Button>
-        <Button variant="red">삭제</Button>
-        <Button variant="blue">저장</Button>
-        <Button variant="primary" disabled>
-          다음 (비활성화)
-        </Button>
-
-        <InputField
-          label="도서명"
-          id="bookName"
-          type="text"
-          errorMessage="도서명을 입력해주세요."
-          required
-        />
-        <InputField label="저자명" id="authorName" />
-        <InputField label="출판일" id="publicationDate" />
-        <InputField label="전체 페이지 수" id="totalPages" />
-        <Select
-          label="독서 상태"
-          id="readingStatus"
-          placeholder="독서 상태를 선택해주세요."
-          value="reading"
-          options={[
-            { value: 'reading', label: '읽는 중' },
-            { value: 'wantToRead', label: '읽고 싶은 책' },
-            { value: 'finished', label: '읽음' },
-            { value: 'onHold', label: '보류 중' },
-          ]}
-        />
-        <InputField label="독서 시작일" id="startDate" type="date" />
-        <InputField label="독서 종료일" id="endDate" type="date" />
-        <Stepper
-          steps={['도서 정보', '독서 기록', '독서 후기']}
-          currentStepIndex={0}
-        />
-        <Alert
-          variant="error"
-          title="도서 정보"
-          description="도서 정보를 입력해주세요."
-        />
-
-        <Ratings rating={4.5} variant="default" size={30} />
-        <Ratings rating={3.5} variant="error" size={30} />
-        <Ratings rating={2.5} variant="yellow" size={30} />
+    <PageContainer>
+      <Container>
+        <HeaderSection>
+          <Title>독서 기록</Title>
+          <Description>단계별로 독서 경험을 기록해보세요</Description>
+        </HeaderSection>
 
         <Card>
-          <h2>도서 기본 정보</h2>
-          <InputField label="도서명" id="bookName" required />
-          <InputField label="저자명" id="authorName" required />
+          <Stepper steps={BOOK_FORM_STEPS} currentStepIndex={currentStep - 1} />
+          <FormProvider {...methods}>
+            <StyledForm onSubmit={methods.handleSubmit(onSubmit)} noValidate>
+              {currentStep === 1 && <BookInfoStep />}
+              {/* TODO: 2~5단계 컴포넌트 추가 */}
+
+              <FormActionButtons
+                currentStep={currentStep}
+                onBack={() => {
+                  /* TODO: 이전 단계로 이동 */
+                }}
+                onReset={() => methods.reset()}
+              />
+            </StyledForm>
+          </FormProvider>
         </Card>
-
-        <Tag variant="default">기본 태그</Tag>
-        <Tag variant="info">정보 태그</Tag>
-        <Tag variant="success">성공 태그</Tag>
-        <Tag variant="warning">경고 태그</Tag>
-        <Tag variant="error">오류 태그</Tag>
-
-        <Icon as={ShareIcon} size={24} color="red" />
-
-        <RadioGroup
-          name="recommend"
-          value="yes"
-          onChange={() => {}}
-          direction="row"
-        >
-          <RadioItem value="yes" label="추천합니다." />
-          <RadioItem value="no" label="추천하지 않습니다." />
-        </RadioGroup>
-      </main>
-    </>
+      </Container>
+    </PageContainer>
   );
 }
+
+const PageContainer = styled.div`
+  min-height: 100vh;
+  background-color: ${color.gray50};
+`;
+
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+`;
+
+const HeaderSection = styled.div`
+  text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: ${fontSize['3xl']};
+  font-weight: ${fontWeight.bold};
+  color: ${color.gray900};
+  margin-bottom: 0.5rem;
+`;
+
+const Description = styled.p`
+  color: ${color.gray600};
+  font-size: ${fontSize.base};
+`;
+
+const StyledForm = styled.form`
+  margin-top: 2rem;
+`;
+
+interface FormActionButtonsProps {
+  currentStep: number;
+  onBack: () => void;
+  onReset: () => void;
+}
+
+function FormActionButtons({
+  currentStep,
+  onBack,
+  onReset,
+}: FormActionButtonsProps) {
+  const isFirstStep = currentStep === 1;
+
+  return (
+    <ButtonContainer hasBackButton={!isFirstStep}>
+      {!isFirstStep && (
+        <Button type="button" variant="secondary" onClick={onBack}>
+          이전
+        </Button>
+      )}
+
+      <ActionButtonGroup>
+        <Button type="button" variant="red" onClick={onReset}>
+          초기화
+        </Button>
+        <Button type="submit" variant="blue">
+          다음
+        </Button>
+      </ActionButtonGroup>
+    </ButtonContainer>
+  );
+}
+
+const ButtonContainer = styled.div<{ hasBackButton?: boolean }>`
+  width: 100%;
+  display: flex;
+  justify-content: ${({ hasBackButton }) =>
+    hasBackButton ? 'space-between' : 'flex-end'};
+  padding: 1rem;
+  background-color: ${color.white};
+`;
+
+const ActionButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
