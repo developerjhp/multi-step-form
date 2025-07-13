@@ -4,9 +4,13 @@ import Stepper from '@/components/form/Stepper';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import Icon from '@/components/ui/Icon';
 import { Ratings } from '@/components/ui/Rating';
 import Tag from '@/components/ui/Tag';
 import Head from 'next/head';
+import ShareIcon from '@/assets/icons/share.svg';
+import { RadioItem } from '@/components/form/Radio';
+import { RadioGroup } from '@/components/form/Radio';
 
 export default function HomePage() {
   return (
@@ -73,6 +77,18 @@ export default function HomePage() {
         <Tag variant="success">성공 태그</Tag>
         <Tag variant="warning">경고 태그</Tag>
         <Tag variant="error">오류 태그</Tag>
+
+        <Icon as={ShareIcon} size={24} color="red" />
+
+        <RadioGroup
+          name="recommend"
+          value="yes"
+          onChange={() => {}}
+          direction="row"
+        >
+          <RadioItem value="yes" label="추천합니다." />
+          <RadioItem value="no" label="추천하지 않습니다." />
+        </RadioGroup>
       </main>
     </>
   );
