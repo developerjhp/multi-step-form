@@ -18,8 +18,4 @@ export default function Layout({ children }: LayoutProps) {
   );
 }
 
-const Container = styled.div`
-  max-width: 1024px;
-  margin: 0 auto;
-  padding: 2.5rem 1.25rem;
-`;
+const Container = styled.div``;
