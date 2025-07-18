@@ -3,7 +3,7 @@ import { color } from '@/styles/colors';
 import { fontSize, fontWeight } from '@/styles/fonts';
 import { spacing } from '@/styles/spacing';
 import Icon from '@/components/ui/Icon';
-import { Ratings } from '@/components/ui/Rating';
+import Ratings from '@/components/ui/Ratings';
 import Heart from '@/assets/icons/heart.svg';
 import { Section, SectionTitle } from '@/components/preview/styles/shared';
 
@@ -23,10 +23,7 @@ export function RatingSection({ recommend, rating }: RatingSectionProps) {
             <Icon
               as={Heart}
               size={16}
-              style={{
-                fill: recommend ? color.red500 : 'none',
-              }}
-              color={recommend ? color.red500 : color.gray300}
+              color={recommend ? color.red500 : color.gray400}
             />
             <RatingText>{recommend ? '예' : '아니오'}</RatingText>
           </RatingValue>

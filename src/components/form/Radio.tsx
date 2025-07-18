@@ -24,6 +24,7 @@ interface RadioGroupProps {
   children: React.ReactNode;
   label?: string;
   direction?: 'row' | 'column';
+  errorMessage?: string;
 }
 
 export function RadioGroup({
@@ -33,6 +34,7 @@ export function RadioGroup({
   children,
   label,
   direction = 'column',
+  errorMessage,
 }: RadioGroupProps) {
   return (
     <RadioGroupContainer direction={direction}>
@@ -42,6 +44,7 @@ export function RadioGroup({
       >
         {children}
       </RadioGroupContext.Provider>
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </RadioGroupContainer>
   );
 }
@@ -149,4 +152,10 @@ const RadioLabel = styled.span<{ disabled?: boolean }>`
   margin-left: 0.5rem;
   font-size: ${fontSize.base};
   color: ${({ disabled }) => (disabled ? color.gray500 : color.gray900)};
+`;
+
+const ErrorMessage = styled.p`
+  font-size: ${fontSize.sm};
+  color: ${color.red500};
+  margin-top: 0.25rem;
 `;

@@ -16,7 +16,7 @@
  * const evening = new Date('2024-12-25T21:30:00');
  * console.log(normalizeDate(morning).getTime() === normalizeDate(evening).getTime()); // true
  */
-export const normalizeDate = (date: Date): Date => {
+export const normalizeDate = (date: Date | string): Date => {
   const normalized = new Date(date);
   normalized.setHours(0, 0, 0, 0);
   return normalized;
@@ -44,7 +44,10 @@ export const normalizeDate = (date: Date): Date => {
  * const targetDate = new Date('2024-12-25');
  * const isToday = isSameDate(targetDate, new Date());
  */
-export const isSameDate = (date1: Date, date2: Date): boolean => {
+export const isSameDate = (
+  date1: Date | string,
+  date2: Date | string,
+): boolean => {
   return normalizeDate(date1).getTime() === normalizeDate(date2).getTime();
 };
 
@@ -72,7 +75,10 @@ export const isSameDate = (date1: Date, date2: Date): boolean => {
  * const endDate = new Date('2024-12-15');
  * const isValidPeriod = isAfterDate(endDate, startDate); // true
  */
-export const isAfterDate = (date1: Date, date2: Date): boolean => {
+export const isAfterDate = (
+  date1: Date | string,
+  date2: Date | string,
+): boolean => {
   return normalizeDate(date1) > normalizeDate(date2);
 };
 
@@ -107,7 +113,10 @@ export const isAfterDate = (date1: Date, date2: Date): boolean => {
  *   isAfterOrSameDate(record.date, filterDate)
  * ); // filterDate 이후의 기록들만 필터링
  */
-export const isAfterOrSameDate = (date1: Date, date2: Date): boolean => {
+export const isAfterOrSameDate = (
+  date1: Date | string,
+  date2: Date | string,
+): boolean => {
   return normalizeDate(date1) >= normalizeDate(date2);
 };
 
@@ -130,10 +139,14 @@ export const isAfterOrSameDate = (date1: Date, date2: Date): boolean => {
  * // "12월 1일 - 12월 15일"
  */
 export const formatKoreanShortDate = (
-  date: Date | null | undefined,
+  date: Date | string | null | undefined,
 ): string => {
   if (!date) {
     return '';
+  }
+
+  if (typeof date === 'string') {
+    date = new Date(date);
   }
 
   return date.toLocaleDateString('ko-KR', {
