@@ -31,7 +31,8 @@ export const bookFormSchema = z
       .number({
         invalid_type_error: '숫자를 입력해주세요.',
       })
-      .min(1, { message: '1 이상의 숫자를 입력해주세요.' }),
+      .min(1, { message: '1 이상의 숫자를 입력해주세요.' })
+      .optional(),
     status: z.enum(READING_STATUS_VALUES, {
       errorMap: () => ({ message: '독서 상태를 선택해주세요.' }),
     }),
@@ -44,7 +45,23 @@ export const bookFormSchema = z
     isPublic: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
-    const { status, startDate, endDate, publishedDate, rating, review } = data;
+    const {
+      status,
+      startDate,
+      endDate,
+      publishedDate,
+      rating,
+      review,
+      totalPages,
+    } = data;
+
+    if (totalPages === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: '전체 페이지 수를 입력해주세요.',
+        path: ['totalPages'],
+      });
+    }
 
     if (status === READING_STATUS.WISH) {
       if (startDate) {
@@ -121,7 +138,6 @@ export const bookFormSchema = z
       }
     }
 
-    // PRD: 별점이 1점 또는 5점일 경우: 독후감 100자 이상 필수
     if ((rating === 1 || rating === 5) && (!review || review.length < 100)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
