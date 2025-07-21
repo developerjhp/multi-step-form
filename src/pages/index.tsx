@@ -5,29 +5,26 @@ import {
   type BookFormSchema,
   BOOK_FORM_DEFAULT_VALUES,
 } from '@/utils/schema';
-import BookInfoStep from '@/components/form/steps/BookInfoStep';
 import Stepper from '@/components/form/Stepper';
 import styled from '@emotion/styled';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { color } from '@/styles/colors';
 import { fontSize, fontWeight } from '@/styles/fonts';
-import { BOOK_FORM_STEPS } from '@/constants/book';
+import { BOOK_FORM_STEPS } from '@/constants/form';
 import { AppPreview } from '@/components/preview/AppPreview';
 import {
   DESKTOP_MIN_WIDTH,
   useIsAboveMinWidth,
 } from '@/hooks/useIsAboveMinWidth';
+import { useStepForm } from '@/hooks/useStepForm';
 
 export default function HomePage() {
   const isDesktop = useIsAboveMinWidth(DESKTOP_MIN_WIDTH);
 
-  // TODO: PRD 3.4 - URL 쿼리 파라미터로 현재 단계 관리
-  const currentStep = 1;
-
   const methods = useForm<BookFormSchema>({
     resolver: zodResolver(bookFormSchema),
-    mode: 'all',
+    mode: 'onChange',
     defaultValues: BOOK_FORM_DEFAULT_VALUES,
   });
 
@@ -39,6 +36,19 @@ export default function HomePage() {
     // 최종 제출 로직
     console.log(data);
   };
+
+  const {
+    currentStepIndex,
+    currentStep,
+    isFirstStep,
+    isLastStep,
+    handleNext,
+    handleBack,
+    handleReset,
+    steps,
+  } = useStepForm<BookFormSchema>(BOOK_FORM_STEPS, methods, onSubmit);
+
+  const CurrentStepComponent = currentStep?.component;
 
   return (
     <PageContainer>
@@ -52,23 +62,19 @@ export default function HomePage() {
           <FormWrapper>
             <Card>
               <Stepper
-                steps={BOOK_FORM_STEPS}
-                currentStepIndex={currentStep - 1}
+                steps={steps.map((step) => step.label)}
+                currentStepIndex={currentStepIndex}
               />
               <FormProvider {...methods}>
-                <StyledForm
-                  onSubmit={methods.handleSubmit(onSubmit)}
-                  noValidate
-                >
-                  {currentStep === 1 && <BookInfoStep />}
-                  {/* TODO: 2~5단계 컴포넌트 추가 */}
+                <StyledForm noValidate>
+                  <CurrentStepComponent />
 
                   <FormActionButtons
-                    currentStep={currentStep}
-                    onBack={() => {
-                      /* TODO: 이전 단계로 이동 */
-                    }}
-                    onReset={() => methods.reset()}
+                    isFirstStep={isFirstStep}
+                    isLastStep={isLastStep}
+                    onBack={handleBack}
+                    onNext={handleNext}
+                    onReset={handleReset}
                   />
                 </StyledForm>
               </FormProvider>
@@ -133,18 +139,20 @@ const StyledForm = styled.form`
 `;
 
 interface FormActionButtonsProps {
-  currentStep: number;
+  isFirstStep: boolean;
+  isLastStep: boolean;
   onBack: () => void;
+  onNext: () => void;
   onReset: () => void;
 }
 
 function FormActionButtons({
-  currentStep,
+  isFirstStep,
+  isLastStep,
   onBack,
+  onNext,
   onReset,
 }: FormActionButtonsProps) {
-  const isFirstStep = currentStep === 1;
-
   return (
     <ButtonContainer hasBackButton={!isFirstStep}>
       {!isFirstStep && (
@@ -157,8 +165,8 @@ function FormActionButtons({
         <Button type="button" variant="red" onClick={onReset}>
           초기화
         </Button>
-        <Button type="submit" variant="blue">
-          다음
+        <Button type="button" variant="blue" onClick={onNext}>
+          {isLastStep ? '제출' : '다음'}
         </Button>
       </ActionButtonGroup>
     </ButtonContainer>
