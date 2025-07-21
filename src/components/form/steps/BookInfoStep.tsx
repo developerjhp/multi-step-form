@@ -5,11 +5,8 @@ import Alert from '@/components/ui/Alert';
 import Icon from '@/components/ui/Icon';
 import styled from '@emotion/styled';
 import { type BookFormSchema } from '@/utils/schema';
-import {
-  READING_STATUS_OPTIONS,
-  BOOK_FORM_STEPS,
-  READING_STATUS,
-} from '@/constants/book';
+import { READING_STATUS_OPTIONS, READING_STATUS } from '@/constants/book';
+import { BOOK_FORM_STEPS } from '@/constants/form';
 import AlertTriangleIcon from '@/assets/icons/alert-triangle.svg';
 
 const STATUS_REQUIRED_POLICY = {

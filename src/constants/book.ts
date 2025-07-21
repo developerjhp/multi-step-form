@@ -1,5 +1,3 @@
-import { BookFormSchema } from '@/utils/schema';
-
 export const READING_STATUS = {
   WISH: 'WISH' as const,
   READING: 'READING' as const,
@@ -28,40 +26,4 @@ export const READING_STATUS_LABELS = {
   [READING_STATUS.READING]: '읽는 중',
   [READING_STATUS.DONE]: '읽음',
   [READING_STATUS.PAUSE]: '보류 중',
-} as const;
-
-export const BOOK_FORM_STEPS = {
-  BOOK_INFO: {
-    order: 1,
-    label: '도서 정보',
-    fields: [
-      'title',
-      'author',
-      'publishedDate',
-      'totalPages',
-      'status',
-      'startDate',
-      'endDate',
-    ] as (keyof BookFormSchema)[],
-  },
-  RATING: {
-    order: 2,
-    label: '추천 & 별점',
-    fields: ['recommend', 'rating'] as (keyof BookFormSchema)[],
-  },
-  REVIEW: {
-    order: 3,
-    label: '독후감',
-    fields: ['review'] as (keyof BookFormSchema)[],
-  },
-  QUOTES: {
-    order: 4,
-    label: '인용구',
-    fields: ['quotes'] as (keyof BookFormSchema)[],
-  },
-  PUBLIC: {
-    order: 5,
-    label: '공개 설정',
-    fields: ['isPublic'] as (keyof BookFormSchema)[],
-  },
 } as const;
