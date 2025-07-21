@@ -42,7 +42,7 @@ export const bookFormSchema = z
     isPublic: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
-    const { status, startDate, endDate, publishedDate } = data;
+    const { status, startDate, endDate, publishedDate, rating, review } = data;
 
     if (status === READING_STATUS.WISH) {
       if (startDate) {
@@ -117,5 +117,14 @@ export const bookFormSchema = z
           path: ['startDate'],
         });
       }
+    }
+
+    // PRD: 별점이 1점 또는 5점일 경우: 독후감 100자 이상 필수
+    if ((rating === 1 || rating === 5) && (!review || review.length < 100)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: '별점이 1점 또는 5점인 경우 독후감을 100자 이상 입력해주세요.',
+        path: ['review'],
+      });
     }
   });
