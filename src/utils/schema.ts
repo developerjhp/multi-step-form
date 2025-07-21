@@ -7,7 +7,7 @@ export const BOOK_FORM_DEFAULT_VALUES = {
   title: '',
   author: '',
   publishedDate: '',
-  totalPages: 0,
+  totalPages: undefined,
   status: READING_STATUS.WISH,
   startDate: null,
   endDate: null,
@@ -28,8 +28,10 @@ export const bookFormSchema = z
     author: z.string().min(1, { message: '저자명을 입력해주세요.' }),
     publishedDate: dateSchema,
     totalPages: z.coerce
-      .number()
-      .min(1, { message: '전체 페이지 수를 입력해주세요.' }),
+      .number({
+        invalid_type_error: '숫자를 입력해주세요.',
+      })
+      .min(1, { message: '1 이상의 숫자를 입력해주세요.' }),
     status: z.enum(READING_STATUS_VALUES, {
       errorMap: () => ({ message: '독서 상태를 선택해주세요.' }),
     }),

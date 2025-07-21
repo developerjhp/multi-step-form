@@ -1,5 +1,6 @@
 import { useFormContext, Controller } from 'react-hook-form';
 import InputField from '@/components/form/InputField';
+import RHFCommaSeparatedInput from '@/components/form/RHFCommaSeparatedInput';
 import Select from '@/components/form/Select';
 import Alert from '@/components/ui/Alert';
 import Icon from '@/components/ui/Icon';
@@ -71,13 +72,10 @@ export default function BookInfoStep() {
           errorMessage={errors.publishedDate?.message}
         />
 
-        {/* TODO: 3.6 요구사항에 따라 RHFCommaSeparatedInput 컴포넌트 사용 */}
-        <InputField
-          id="totalPages"
+        <RHFCommaSeparatedInput
+          name="totalPages"
+          control={control}
           label="전체 페이지 수"
-          type="number"
-          {...register('totalPages')}
-          errorMessage={errors.totalPages?.message}
           placeholder="숫자를 입력해주세요"
           required
         />
