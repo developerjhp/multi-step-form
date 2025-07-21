@@ -5,22 +5,35 @@ import Alert from '@/components/ui/Alert';
 import Icon from '@/components/ui/Icon';
 import styled from '@emotion/styled';
 import { type BookFormSchema } from '@/utils/schema';
-import { READING_STATUS, READING_STATUS_OPTIONS } from '@/constants/book';
+import {
+  READING_STATUS_OPTIONS,
+  BOOK_FORM_STEPS,
+  READING_STATUS,
+} from '@/constants/book';
 import AlertTriangleIcon from '@/assets/icons/alert-triangle.svg';
+
+const STATUS_REQUIRED_POLICY = {
+  [READING_STATUS.WISH]: { startDate: false, endDate: false },
+  [READING_STATUS.READING]: { startDate: true, endDate: false },
+  [READING_STATUS.DONE]: { startDate: true, endDate: true },
+  [READING_STATUS.PAUSE]: { startDate: true, endDate: false },
+} as const;
 
 export default function BookInfoStep() {
   const {
     register,
-    watch,
     control,
+    watch,
     formState: { errors },
   } = useFormContext<BookFormSchema>();
 
   const status = watch('status');
-  const shouldShowStartDate = status && status !== READING_STATUS.WISH;
-  const shouldShowEndDate = status === READING_STATUS.DONE;
+  const { startDate: isStartDateRequired, endDate: isEndDateRequired } =
+    STATUS_REQUIRED_POLICY[status];
 
-  const hasErrors = Object.keys(errors).length > 0;
+  const hasErrors = BOOK_FORM_STEPS.BOOK_INFO.fields.some(
+    (field) => errors[field],
+  );
 
   return (
     <Container>
@@ -59,7 +72,6 @@ export default function BookInfoStep() {
           type="date"
           {...register('publishedDate')}
           errorMessage={errors.publishedDate?.message}
-          required
         />
 
         {/* TODO: 3.6 요구사항에 따라 RHFCommaSeparatedInput 컴포넌트 사용 */}
@@ -93,26 +105,22 @@ export default function BookInfoStep() {
       />
 
       <GridContainer>
-        {shouldShowStartDate && (
-          <InputField
-            id="startDate"
-            label="독서 시작일"
-            type="date"
-            {...register('startDate')}
-            errorMessage={errors.startDate?.message}
-            required
-          />
-        )}
-        {shouldShowEndDate && (
-          <InputField
-            id="endDate"
-            label="독서 종료일"
-            type="date"
-            {...register('endDate')}
-            errorMessage={errors.endDate?.message}
-            required
-          />
-        )}
+        <InputField
+          id="startDate"
+          label="독서 시작일"
+          type="date"
+          {...register('startDate')}
+          errorMessage={errors.startDate?.message}
+          required={isStartDateRequired}
+        />
+        <InputField
+          id="endDate"
+          label="독서 종료일"
+          type="date"
+          {...register('endDate')}
+          errorMessage={errors.endDate?.message}
+          required={isEndDateRequired}
+        />
       </GridContainer>
     </Container>
   );
