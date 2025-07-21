@@ -73,6 +73,7 @@ export default function BookInfoStep() {
         />
 
         <RHFCommaSeparatedInput
+          id="totalPages"
           name="totalPages"
           control={control}
           label="전체 페이지 수"
