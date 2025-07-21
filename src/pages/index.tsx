@@ -17,7 +17,8 @@ import {
   DESKTOP_MIN_WIDTH,
   useIsAboveMinWidth,
 } from '@/hooks/useIsAboveMinWidth';
-import { useStepForm } from '@/hooks/useStepForm';
+import useStepForm from '@/hooks/useStepForm';
+import { LOCAL_STORAGE_KEYS } from '@/constants/localStorage';
 
 export default function HomePage() {
   const isDesktop = useIsAboveMinWidth(DESKTOP_MIN_WIDTH);
@@ -46,7 +47,13 @@ export default function HomePage() {
     handleBack,
     handleReset,
     steps,
-  } = useStepForm<BookFormSchema>(BOOK_FORM_STEPS, methods, onSubmit);
+  } = useStepForm<BookFormSchema>(
+    BOOK_FORM_STEPS,
+    methods,
+    onSubmit,
+    BOOK_FORM_DEFAULT_VALUES,
+    { persistenceKey: LOCAL_STORAGE_KEYS.MULTI_STEP_FORM_DATA },
+  );
 
   const CurrentStepComponent = currentStep?.component;
 

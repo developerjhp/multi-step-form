@@ -1,6 +1,8 @@
-import { ComponentType, useEffect } from 'react';
+import { ComponentType } from 'react';
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
-import { useRouter } from 'next/router';
+import useUrlStep from '@/hooks/useUrlStep';
+import useFormPersistence from '@/hooks/useFormPersistence';
+import { LocalStorageKey } from '@/constants/localStorage';
 
 export interface StepConfig<T extends FieldValues> {
   readonly order: number;
@@ -20,82 +22,75 @@ export interface StepFormReturn<T extends FieldValues> {
   readonly steps: StepConfig<T>[];
 }
 
-export function useStepForm<T extends FieldValues>(
+interface UseStepFormOptions {
+  persistenceKey: LocalStorageKey;
+}
+
+/**
+ * 멀티 스텝 폼의 전체 로직을 관리합니다.
+ * @param stepDefinitions 각 스텝의 설정 정보
+ * @param methods useForm에서 반환된 객체
+ * @param onSubmit 최종 제출 시 실행될 콜백 함수
+ * @param defaultValues 폼의 기본값
+ * @param options 추가 옵션 (예: { persistenceKey: '...' })
+ */
+export default function useStepForm<T extends FieldValues>(
   stepDefinitions: Record<string, StepConfig<T>>,
   methods: UseFormReturn<T>,
   onSubmit: (data: T) => void | Promise<void>,
+  defaultValues: T,
+  options: UseStepFormOptions,
 ): StepFormReturn<T> {
-  const router = useRouter();
-  const { isReady, query } = router;
-
   const steps = Object.values(stepDefinitions).sort(
     (a, b) => a.order - b.order,
   );
   const stepCount = steps.length;
 
-  const getStepIndex = () => {
-    if (!isReady) return 0;
-    const step = Number(query.step);
-    if (isNaN(step) || step < 1 || step > stepCount) return 0;
-    return step - 1;
-  };
+  const { currentStepIndex, navigateToStep, isFirstStep, isLastStep } =
+    useUrlStep(stepCount);
+  const { clearStoredData } = useFormPersistence(
+    methods,
+    options.persistenceKey,
+  );
 
-  const currentStepIndex = getStepIndex();
   const currentStep = steps[currentStepIndex];
-  const isFirstStep = currentStepIndex === 0;
-  const isLastStep = currentStepIndex === stepCount - 1;
-
-  const navigateToStep = (stepNumber: number, replace = false) => {
-    const method = replace ? router.replace : router.push;
-    method(`?step=${stepNumber}`, undefined, { shallow: true });
-  };
-
-  useEffect(() => {
-    if (!isReady) return;
-
-    const step = Number(query.step);
-
-    if (isNaN(step) || step < 1 || step > stepCount) {
-      navigateToStep(1, true);
-    }
-  }, [isReady, query, stepCount, router]);
 
   const handleNext = async () => {
     if (!currentStep) return;
 
-    try {
-      const { fields } = currentStep;
-      const isValid = await methods.trigger(fields);
+    const { fields } = currentStep;
+    const isValid = await methods.trigger(fields);
 
-      if (!isValid) {
-        const firstErrorField = fields.find(
-          (field) => methods.formState.errors[field],
-        );
-        if (firstErrorField) {
-          methods.setFocus(firstErrorField as Path<T>);
-        }
-        return;
+    if (!isValid) {
+      const firstErrorField = fields.find(
+        (field) => methods.formState.errors[field],
+      );
+      if (firstErrorField) {
+        methods.setFocus(firstErrorField);
       }
+      return;
+    }
 
-      if (isLastStep) {
-        await methods.handleSubmit(onSubmit)();
-      } else {
-        navigateToStep(currentStepIndex + 2);
-      }
-    } catch (error) {
-      console.error('Step navigation failed:', error);
+    if (isLastStep) {
+      await methods.handleSubmit(onSubmit)();
+      clearStoredData();
+    } else {
+      navigateToStep(currentStepIndex + 2);
     }
   };
 
   const handleBack = () => {
-    if (isFirstStep) return;
+    if (isFirstStep) {
+      return;
+    }
 
     navigateToStep(currentStepIndex);
   };
 
   const handleReset = () => {
+    clearStoredData();
+    methods.reset(defaultValues);
     navigateToStep(1);
-    methods.reset();
   };
 
   return {
