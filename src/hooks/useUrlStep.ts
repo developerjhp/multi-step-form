@@ -2,23 +2,28 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 interface UseUrlStepOptions {
-  /** URL 쿼리 파라미터로 사용할 이름입니다. 기본값은 'step'입니다. */
+  /** URL 쿼리 파라미터로 사용할 이름입니다. (기본값: 'step') */
   paramName?: string;
 }
 
 /**
- * URL 쿼리 파라미터를 기반으로 멀티스텝 UI의 현재 스텝을 관리합니다.
- * 이 훅은 범용적으로 설계되어 어떤 이름의 쿼리 파라미터와도 함께 사용할 수 있습니다.
- * @param totalSteps 전체 스텝의 수
- * @param options 추가 옵션 (예: { paramName: 'tab' })
+ * URL 쿼리 파라미터를 사용해 멀티스텝 UI의 상태를 관리하는 React 훅입니다.
+ * @param totalSteps - 전체 스텝의 수.
+ * @param options - `paramName`을 포함하는 추가 옵션.
  */
 export default function useUrlStep(
   totalSteps: number,
-  options?: UseUrlStepOptions,
+  options: UseUrlStepOptions = {},
 ) {
+  const { paramName = 'step' } = options;
   const router = useRouter();
-  const { isReady, query } = router;
-  const paramName = options?.paramName ?? 'step';
+  const { query, isReady } = router;
+
+  const stepFromQuery = Number(query[paramName]);
+  const isValidStep =
+    !isNaN(stepFromQuery) && 0 < stepFromQuery && stepFromQuery <= totalSteps;
+
+  const currentStepIndex = isReady && isValidStep ? stepFromQuery - 1 : 0;
 
   const navigateToStep = (stepNumber: number, replace = false) => {
     const method = replace ? router.replace : router.push;
@@ -27,30 +32,19 @@ export default function useUrlStep(
     });
   };
 
-  const getStepIndex = () => {
-    if (!isReady) {
-      return 0;
-    }
-    const step = Number(query[paramName]);
-    if (isNaN(step) || step < 1 || step > totalSteps) {
-      return 0;
-    }
-    return step - 1;
-  };
-
-  const currentStepIndex = getStepIndex();
   useEffect(() => {
-    if (!isReady) {
-      return;
-    }
-    const step = Number(query[paramName]);
-    if (isNaN(step) || step < 1 || step > totalSteps) {
+    if (isReady && isValidStep === false) {
       navigateToStep(1, true);
     }
-  }, [isReady, query, totalSteps, paramName]);
+  }, [isReady, isValidStep]);
 
   const isFirstStep = currentStepIndex === 0;
   const isLastStep = currentStepIndex === totalSteps - 1;
 
-  return { currentStepIndex, navigateToStep, isFirstStep, isLastStep };
+  return {
+    currentStepIndex,
+    navigateToStep,
+    isFirstStep,
+    isLastStep,
+  };
 }
