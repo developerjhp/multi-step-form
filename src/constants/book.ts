@@ -27,11 +27,3 @@ export const READING_STATUS_LABELS = {
   [READING_STATUS.DONE]: '읽음',
   [READING_STATUS.PAUSE]: '보류 중',
 } as const;
-
-export const BOOK_FORM_STEPS = [
-  '도서 정보',
-  '추천 & 별점',
-  '독후감',
-  '인용구',
-  '공개 설정',
-];
