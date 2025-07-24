@@ -13,6 +13,10 @@ interface DateSectionProps {
 }
 
 export function DateSection({ startDate, endDate }: DateSectionProps) {
+  if (startDate == null) {
+    return null;
+  }
+
   return (
     <Section>
       <SectionTitle>
