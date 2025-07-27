@@ -1,6 +1,8 @@
 import BookInfoStep from '@/components/form/steps/BookInfoStep';
 import RatingStep from '@/components/form/steps/RatingStep';
 import ReviewStep from '@/components/form/steps/ReviewStep';
+import QuoteStep from '@/components/form/steps/QuoteStep';
+import PublicStep from '@/components/form/steps/PublicStep';
 
 export const BOOK_FORM_STEPS = {
   BOOK_INFO: {
@@ -33,12 +35,12 @@ export const BOOK_FORM_STEPS = {
     order: 4,
     label: '인용구',
     fields: ['quotes'],
-    component: ReviewStep, // FIXME: QuoteStep으로 교체 필요
+    component: QuoteStep,
   },
   PUBLIC: {
     order: 5,
     label: '공개 설정',
     fields: ['isPublic'],
-    component: ReviewStep, // FIXME: PublicStep으로 교체 필요
+    component: PublicStep,
   },
 } as const;
