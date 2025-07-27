@@ -37,6 +37,7 @@ export function AppPreview({ bookInfo }: AppPreviewProps) {
     recommend,
     rating,
     review,
+    quotes,
   } = debouncedBookInfo;
 
   return (
@@ -49,7 +50,7 @@ export function AppPreview({ bookInfo }: AppPreviewProps) {
           <DateSection startDate={startDate} endDate={endDate} />
           <RatingSection recommend={recommend} rating={rating} />
           <ReviewSection review={review} />
-          <QuoteSection />
+          <QuoteSection quotes={quotes} />
           <PrivacySection isPublic={isPublic} />
         </ScrollContent>
         <ActionButtons />
