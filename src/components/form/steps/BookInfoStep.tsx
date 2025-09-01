@@ -1,5 +1,6 @@
 import { useFormContext, Controller } from 'react-hook-form';
 import InputField from '@/components/form/InputField';
+import BookAutocompleteInput from '@/components/form/BookAutocompleteInput';
 import RHFCommaSeparatedInput from '@/components/form/RHFCommaSeparatedInput';
 import Select from '@/components/form/Select';
 import Alert from '@/components/ui/Alert';
@@ -45,12 +46,10 @@ export default function BookInfoStep() {
       )}
 
       <GridContainer>
-        <InputField
-          id="title"
+        <BookAutocompleteInput
+          name="title"
           label="도서명"
-          {...register('title')}
-          errorMessage={errors.title?.message}
-          placeholder="도서명을 입력해주세요"
+          placeholder="도서명을 검색하거나 직접 입력해주세요"
           required
         />
         <InputField
