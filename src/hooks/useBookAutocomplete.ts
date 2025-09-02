@@ -24,7 +24,11 @@ export function useBookAutocomplete(
   const isSearching = debouncedQuery.length >= MIN_SEARCH_LENGTH;
 
   return useQuery({
-    queryKey: ['books', 'autocomplete', debouncedQuery, shouldShowAll],
+    queryKey: [
+      'books',
+      'autocomplete',
+      { query: debouncedQuery, all: shouldShowAll },
+    ],
     queryFn: async () => {
       try {
         if (shouldShowAll) {
