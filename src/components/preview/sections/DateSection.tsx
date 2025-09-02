@@ -8,8 +8,8 @@ import { Section, SectionTitle } from '@/components/preview/styles/shared';
 import { formatKoreanShortDate } from '@/utils/date';
 
 interface DateSectionProps {
-  startDate?: Date | null;
-  endDate?: Date | null;
+  startDate?: string | null;
+  endDate?: string | null;
 }
 
 export function DateSection({ startDate, endDate }: DateSectionProps) {

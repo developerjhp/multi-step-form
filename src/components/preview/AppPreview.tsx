@@ -30,12 +30,14 @@ interface AppPreviewProps {
 export function AppPreview({ bookInfo }: AppPreviewProps) {
   const debouncedBookInfo = useDebounce(bookInfo, PREVIEW_DEBOUNCE_DELAY_MS);
 
-  const { startDate, endDate, isPublic = false } = debouncedBookInfo;
-
-  // TODO: 실제 데이터에서 가져오도록 수정 필요
-  const recommend = true;
-  const rating = 5;
-  const review = '독후감을 작성해주세요...';
+  const {
+    startDate,
+    endDate,
+    isPublic = false,
+    recommend,
+    rating,
+    review,
+  } = debouncedBookInfo;
 
   return (
     <PreviewContainer>

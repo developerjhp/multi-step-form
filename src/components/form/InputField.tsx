@@ -1,47 +1,53 @@
-import { type InputHTMLAttributes } from 'react';
+import { type InputHTMLAttributes, forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { color } from '@/styles/colors';
 import { fontSize, fontWeight } from '@/styles/fonts';
 
-interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   id: string;
   errorMessage?: string;
   required?: boolean;
 }
 
-export default function InputField({
-  label,
-  id,
-  type = 'text',
-  placeholder,
-  value,
-  onChange,
-  errorMessage,
-  required,
-  ...props
-}: InputFieldProps) {
-  const hasError = Boolean(errorMessage);
+export default forwardRef<HTMLInputElement, InputFieldProps>(
+  function InputField(
+    {
+      label,
+      id,
+      type = 'text',
+      placeholder,
+      value,
+      onChange,
+      errorMessage,
+      required,
+      ...props
+    },
+    ref,
+  ) {
+    const hasError = Boolean(errorMessage);
 
-  return (
-    <InputFieldContainer>
-      <Label htmlFor={id}>
-        {label}
-        {required && <RequiredAsterisk>*</RequiredAsterisk>}
-      </Label>
-      <Input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        hasError={hasError}
-        {...props}
-      />
-      {hasError && <ErrorMessage>{errorMessage}</ErrorMessage>}
-    </InputFieldContainer>
-  );
-}
+    return (
+      <InputFieldContainer>
+        <Label htmlFor={id}>
+          {label}
+          {required && <RequiredAsterisk>*</RequiredAsterisk>}
+        </Label>
+        <Input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          hasError={hasError}
+          {...props}
+          ref={ref}
+        />
+        {hasError && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      </InputFieldContainer>
+    );
+  },
+);
 
 const InputFieldContainer = styled.div`
   display: flex;
