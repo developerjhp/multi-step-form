@@ -41,8 +41,18 @@ export const bookFormSchema = z
     recommend: z.boolean({ required_error: '추천 여부를 선택해주세요.' }),
     rating: z.number().min(0.5, { message: '별점을 선택해주세요.' }).max(5),
     review: z.string().optional(),
-    quotes: z.array(z.string()).optional(),
-    isPublic: z.boolean().optional(),
+    quotes: z
+      .array(
+        z.object({
+          text: z.string().min(1, { message: '인용구 내용을 입력해주세요.' }),
+          pageNumber: z.coerce
+            .number()
+            .min(1, { message: '1 이상의 페이지 번호를 입력해주세요.' })
+            .optional(),
+        }),
+      )
+      .optional(),
+    isPublic: z.boolean({ required_error: '공개 설정을 선택해주세요.' }),
   })
   .superRefine((data, ctx) => {
     const {
@@ -53,6 +63,7 @@ export const bookFormSchema = z
       rating,
       review,
       totalPages,
+      quotes,
     } = data;
 
     if (totalPages === undefined) {
@@ -143,6 +154,30 @@ export const bookFormSchema = z
         code: z.ZodIssueCode.custom,
         message: '별점이 1점 또는 5점인 경우 독후감을 100자 이상 입력해주세요.',
         path: ['review'],
+      });
+    }
+
+    if (quotes && quotes.length > 0) {
+      const hasMultipleQuotes = quotes.length >= 2;
+
+      quotes.forEach((quote, index) => {
+        if (quote.pageNumber !== undefined) {
+          if (totalPages !== undefined && quote.pageNumber > totalPages) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `페이지 번호는 전체 페이지 수(${totalPages}) 이하여야 합니다.`,
+              path: ['quotes', index, 'pageNumber'],
+            });
+          }
+        }
+
+        if (hasMultipleQuotes && quote.pageNumber === undefined) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '인용구가 2개 이상인 경우 페이지 번호는 필수입니다.',
+            path: ['quotes', index, 'pageNumber'],
+          });
+        }
       });
     }
   });
